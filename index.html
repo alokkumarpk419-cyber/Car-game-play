@@ -1,239 +1,396 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
-<title>Turbo Coin Racer</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#05070a">
+<title>Turbo Coin Racer X</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-html,body{width:100%;height:100%;overflow:hidden;font-family:Arial,sans-serif;background:#55a630}
-body{touch-action:none}
-#gameArea{position:relative;width:min(420px,100vw);height:100vh;margin:auto;background:#343434;overflow:hidden;border-left:8px solid #fff;border-right:8px solid #fff}
-.roadLine{position:absolute;width:10px;height:105px;background:#fff;left:50%;transform:translateX(-50%);border-radius:5px;opacity:.95}
-.sideTree{position:absolute;z-index:2;font-size:42px;filter:drop-shadow(0 4px 3px #0008);pointer-events:none}
-.left{left:8px}.right{right:8px}
-#hud{position:absolute;z-index:20;top:12px;left:12px;right:12px;display:flex;justify-content:space-between;gap:8px}
-.badge{background:#111d;color:#fff;padding:9px 12px;border-radius:12px;font-weight:bold;border:1px solid #ffffff55}
-#menu,#garage,#gameOver{position:absolute;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;background:linear-gradient(#000b,#000d);padding:18px}
-.panel{width:min(370px,94%);background:#151515;border:2px solid #fff3;border-radius:22px;padding:22px;text-align:center;color:#fff;box-shadow:0 15px 50px #000}
-h1{font-size:30px;color:#ffd21c;text-shadow:0 0 12px #ff9d00}
-.sub{color:#bbb;margin:8px 0 18px}
-.mainBtn,.carBtn{border:0;border-radius:14px;padding:13px 20px;font-size:18px;font-weight:bold;cursor:pointer}
-.mainBtn{background:#ffd21c;color:#171717;box-shadow:0 5px 0 #9e7400}
-.mainBtn:active,.carBtn:active{transform:translateY(3px);box-shadow:none}
-#garage{display:none}
-.carGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:14px 0}
-.carBtn{background:#252525;color:#fff;border:1px solid #555;box-shadow:none}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{width:100%;height:100%;overflow:hidden;background:#05070a;font-family:Arial,sans-serif;touch-action:none}
+body{display:flex;align-items:center;justify-content:center;color:#fff}
+#game{position:fixed;inset:0;width:100vw;height:100dvh;overflow:hidden;background:#111;user-select:none}
+canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+#rotate{position:fixed;inset:0;z-index:99999;display:none;align-items:center;justify-content:center;background:#05070a;text-align:center;padding:30px}
+.rotateBox{max-width:420px}
+.phone{font-size:70px;animation:turn 1.5s infinite ease-in-out}
+@keyframes turn{50%{transform:rotate(90deg)}}
+.rotateBox h2{margin:15px 0 8px;font-size:28px}
+.rotateBox p{color:#aaa}
+#hud{position:absolute;z-index:20;top:max(12px,env(safe-area-inset-top));left:max(12px,env(safe-area-inset-left));right:max(12px,env(safe-area-inset-right));display:flex;justify-content:space-between;align-items:flex-start;pointer-events:none}
+.pill{background:#08100ddd;border:1px solid #ffd21c;border-radius:14px;padding:8px 12px;font-weight:800;font-size:13px;box-shadow:0 0 12px #ffd21c33}
+.hudLeft,.hudRight{display:flex;gap:7px;flex-direction:column}
+.progress{width:96px;height:7px;background:#222;border:1px solid #ffffff44;border-radius:10px;overflow:hidden}
+#hp{height:100%;width:100%;background:#18e889}
+#nitro{height:100%;width:100%;background:#18cfff}
+#pause{position:absolute;right:max(12px,env(safe-area-inset-right));top:90px;z-index:25;width:46px;height:46px;border-radius:50%;border:1px solid #fff8;background:#08100ddd;color:white;font-size:18px}
+#menu,#garage,#over,#pauseMenu{position:absolute;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#02050bee,#071c22dd);padding:20px}
+.panel{width:min(520px,92vw);max-height:90dvh;overflow:auto;text-align:center;background:#10151bed;border:1px solid #ffffff22;border-radius:26px;padding:28px;box-shadow:0 20px 80px #000}
+h1{font-size:clamp(28px,6vw,48px);color:#ffd21c;text-shadow:0 0 20px #ff9d00;margin-bottom:8px}
+.sub{color:#aeb7c2;margin:0 0 22px;line-height:1.5}
+.btn{border:0;border-radius:15px;padding:14px 20px;margin:5px;font-weight:900;font-size:16px;cursor:pointer;background:#ffd21c;color:#111;box-shadow:0 5px 0 #966d00}
+.btn:active{transform:translateY(3px);box-shadow:none}
+.btn.green{background:#22db73;box-shadow:0 5px 0 #128a46}
+.btn.blue{background:#22c9ff;box-shadow:0 5px 0 #087b9f}
+.btn.dark{background:#333;color:#fff;box-shadow:0 5px 0 #111}
+#garage,#over,#pauseMenu{display:none}
+.carGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:15px 0}
+.carBtn{background:#181d24;border:1px solid #ffffff22;color:white;border-radius:15px;padding:12px;font-weight:bold}
 .carBtn.locked{opacity:.55}
-.carPreview{height:55px;position:relative;margin:auto;width:42px}
-.miniCar{position:absolute;inset:4px 5px;background:var(--c);border-radius:10px;border:2px solid #111}
-.miniCar:before,.miniCar:after{content:"";position:absolute;width:9px;height:18px;background:#111;border-radius:4px;top:18px}
-.miniCar:before{left:-6px}.miniCar:after{right:-6px}
-#player{position:absolute;width:58px;height:92px;bottom:105px;left:50%;transform:translateX(-50%);z-index:10;transition:left .08s}
-.carBody{position:absolute;inset:5px 9px;border-radius:14px 14px 10px 10px;background:var(--car,#e22);border:3px solid #111;box-shadow:0 7px 12px #0008}
-.carBody:before{content:"";position:absolute;left:9px;right:9px;top:12px;height:27px;border-radius:9px;background:linear-gradient(135deg,#bfeeff,#34556b);border:2px solid #111}
-.carBody:after{content:"";position:absolute;left:13px;right:13px;bottom:13px;height:15px;border-radius:5px;background:#ffdd33;box-shadow:0 -34px 0 #ff3838}
-.wheel{position:absolute;width:13px;height:27px;background:#111;border-radius:5px;top:18px;z-index:-1}
-.w1{left:0}.w2{right:0}.w3{left:0;bottom:14px;top:auto}.w4{right:0;bottom:14px;top:auto}
-#coinLayer,#enemyLayer{position:absolute;inset:0;z-index:8}
-.coin{position:absolute;width:30px;height:30px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff49a 0 10%,#ffd21c 11% 45%,#d58a00 46% 100%);border:3px solid #fff09b;box-shadow:0 0 14px #ffd21c;display:flex;align-items:center;justify-content:center;color:#9a6200;font-weight:bold}
-.enemy{position:absolute;width:55px;height:88px;border-radius:13px;background:var(--ec,#1976ff);border:3px solid #111;box-shadow:0 6px 10px #0008}
-.enemy:before{content:"";position:absolute;left:9px;right:9px;top:11px;height:25px;background:#83d8ff;border-radius:8px}
-.enemy:after{content:"";position:absolute;left:10px;right:10px;bottom:11px;height:12px;background:#ffdf29;border-radius:4px;box-shadow:0 -35px 0 #ff3535}
-.control{position:absolute;z-index:50;bottom:55px;width:64px;height:64px;border:2px solid #fff8;border-radius:50%;background:#111c;color:#fff;font-size:28px;font-weight:bold}
-#leftBtn{left:22px}#rightBtn{right:22px}
-#speedBtn{left:50%;transform:translateX(-50%);width:78px;height:78px;background:#ff7b00;border-color:#ffd28a;font-size:16px;box-shadow:0 0 20px #ff7b0088}
-#speedBtn.active{background:#e60000;box-shadow:0 0 25px #ff2020}
-#startPlay{margin-top:4px}
-#gameOver{display:none}
-.small{font-size:13px;color:#aaa;margin-top:12px}
+.preview{height:55px;width:35px;margin:auto  auto 7px;background:var(--c);border-radius:10px;border:3px solid #111;box-shadow:0 5px 10px #000}
+.small{font-size:12px;color:#8e98a4;margin-top:14px}
+#controls{position:absolute;z-index:30;left:0;right:0;bottom:max(22px,calc(env(safe-area-inset-bottom) + 14px));height:105px;pointer-events:none}
+.ctrl{position:absolute;pointer-events:auto;border:2px solid #ffffff88;color:white;background:#08100dcc;border-radius:50%;font-weight:900;box-shadow:0 8px 25px #0008}
+#left,#right{width:66px;height:66px;bottom:8px;font-size:28px}
+#left{left:max(18px,env(safe-area-inset-left))}
+#right{left:max(92px,calc(env(safe-area-inset-left) + 82px))}
+#turbo{right:max(20px,env(safe-area-inset-right));bottom:0;width:94px;height:94px;background:#ff7b00;border-color:#ffd28a;font-size:14px;box-shadow:0 0 25px #ff7b0077}
+#turbo.on{background:#e50018;box-shadow:0 0 35px #ff2030}
+#toast{position:absolute;z-index:200;left:50%;top:18%;transform:translateX(-50%);padding:10px 18px;border-radius:14px;background:#000c;border:1px solid #fff4;color:#fff;font-weight:bold;opacity:0;transition:.25s;pointer-events:none}
+#toast.show{opacity:1}
+@media (orientation:portrait){
+  #game{display:none}
+  #rotate{display:flex}
+}
+@media (max-height:500px){
+  #hud{top:7px}
+  #pause{top:55px}
+  #controls{height:88px;bottom:8px}
+  #left,#right{width:56px;height:56px}
+  #turbo{width:78px;height:78px}
+}
 </style>
 </head>
 <body>
+<div id="rotate"><div class="rotateBox"><div class="phone">📱</div><h2>Please Rotate Your Device</h2><p>Turn your phone sideways to play Turbo Coin Racer.</p></div></div>
 
-<div id="gameArea">
-  <div class="sideTree left" style="top:8%">🌳</div>
-  <div class="sideTree right" style="top:17%">🌲</div>
-  <div class="sideTree left" style="top:38%">🌲</div>
-  <div class="sideTree right" style="top:49%">🌳</div>
-  <div class="sideTree left" style="top:69%">🌳</div>
-  <div class="sideTree right" style="top:79%">🌲</div>
+<div id="game">
+<canvas id="canvas"></canvas>
 
-  <div id="hud">
-    <div class="badge">🏆 <span id="score">0</span></div>
-    <div class="badge">🪙 <span id="coins">0</span></div>
+<div id="hud">
+  <div class="hudLeft">
+    <div class="pill">🏆 SCORE <span id="score">0</span></div>
+    <div class="pill">🪙 <span id="coins">0</span></div>
+    <div class="progress"><div id="hp"></div></div>
+    <div class="progress"><div id="nitro"></div></div>
   </div>
-
-  <div id="player" style="--car:#e22">
-    <div class="wheel w1"></div><div class="wheel w2"></div>
-    <div class="wheel w3"></div><div class="wheel w4"></div>
-    <div class="carBody"></div>
+  <div class="hudRight">
+    <div class="pill">LEVEL <span id="level">1</span></div>
+    <div class="pill"><span id="distance">0</span> M</div>
   </div>
+</div>
+<button id="pause">Ⅱ</button>
 
-  <div id="coinLayer"></div>
-  <div id="enemyLayer"></div>
+<div id="controls">
+  <button class="ctrl" id="left">◀</button>
+  <button class="ctrl" id="right">▶</button>
+  <button class="ctrl" id="turbo">⚡<br>TURBO</button>
+</div>
 
-  <button class="control" id="leftBtn">◀</button>
-  <button class="control" id="speedBtn">⚡<br>SPEED</button>
-  <button class="control" id="rightBtn">▶</button>
+<div id="menu">
+ <div class="panel">
+   <h1>🏎️ TURBO COIN RACER X</h1>
+   <p class="sub">Dodge traffic • Collect coins • Upgrade your car • Boost through the highway</p>
+   <button class="btn" id="play">▶ PLAY</button>
+   <button class="btn green" id="cars">🚗 GARAGE</button>
+   <p class="small">Landscape mode • Touch controls • Keyboard support • Progress saved</p>
+ </div>
+</div>
 
-  <div id="menu">
-    <div class="panel">
-      <h1>🏎️ TURBO COIN RACER</h1>
-      <p class="sub">Collect coins • Unlock cars • Go TURBO!</p>
-      <button class="mainBtn" id="startPlay">▶ PLAY</button>
-      <button class="mainBtn" id="openGarage" style="margin-left:6px;background:#38d46a">🚗 CARS</button>
-      <div class="small">Use ◀ ▶ to steer. Tap SPEED for turbo.</div>
-    </div>
-  </div>
+<div id="garage">
+ <div class="panel">
+   <h1>🚗 GARAGE</h1>
+   <p class="sub">Coins: 🪙 <b id="garageCoins">0</b></p>
+   <div class="carGrid" id="carGrid"></div>
+   <button class="btn dark" id="back">BACK</button>
+ </div>
+</div>
 
-  <div id="garage">
-    <div class="panel">
-      <h1>🚗 CAR GARAGE</h1>
-      <p class="sub">Your coins: 🪙 <b id="garageCoins">0</b></p>
-      <div class="carGrid" id="carGrid"></div>
-      <button class="mainBtn" id="closeGarage">BACK</button>
-    </div>
-  </div>
+<div id="over">
+ <div class="panel">
+   <h1>💥 GAME OVER</h1>
+   <p class="sub">Score: <b id="finalScore">0</b><br>Distance: <b id="finalDistance">0</b> M<br>Coins: 🪙 <b id="finalCoins">0</b></p>
+   <button class="btn" id="again">🔄 PLAY AGAIN</button>
+   <button class="btn dark" id="home">HOME</button>
+ </div>
+</div>
 
-  <div id="gameOver">
-    <div class="panel">
-      <h1>💥 GAME OVER</h1>
-      <p class="sub">Score: <b id="finalScore">0</b> • Coins: <b id="finalCoins">0</b></p>
-      <button class="mainBtn" id="restart">🔄 PLAY AGAIN</button>
-      <button class="mainBtn" id="homeBtn" style="margin-left:6px;background:#555;color:#fff">HOME</button>
-    </div>
-  </div>
+<div id="pauseMenu">
+ <div class="panel">
+   <h1>⏸ PAUSED</h1>
+   <p class="sub">Take a break. Your run is safe.</p>
+   <button class="btn green" id="resume">▶ RESUME</button>
+   <button class="btn dark" id="quit">HOME</button>
+ </div>
+</div>
+<div id="toast"></div>
 </div>
 
 <script>
-const gameArea=document.getElementById("gameArea"),player=document.getElementById("player");
-const scoreEl=document.getElementById("score"),coinsEl=document.getElementById("coins");
-const menu=document.getElementById("menu"),garage=document.getElementById("garage"),gameOver=document.getElementById("gameOver");
-let score=0,coins=Number(localStorage.getItem("coins")||0),running=false,turbo=false;
-let playerX=0, roadW=0, speed=5, objects=[], lastSpawn=0, raf=0;
+(() => {
+const canvas=document.getElementById("canvas"),ctx=canvas.getContext("2d");
+const game=document.getElementById("game");
+const $=id=>document.getElementById(id);
+let W=0,H=0,DPR=1,roadX=0,roadW=0;
+let running=false,paused=false,turbo=false,last=0,spawnTimer=0;
+let score=0,coins=Number(localStorage.getItem("tcxCoins")||0),distance=0,hp=100,nitro=100,level=1;
+let playerX=0,objects=[],keys={};
+let selected=Number(localStorage.getItem("tcxSelected")||0);
+let unlocked=JSON.parse(localStorage.getItem("tcxUnlocked")||"[0]");
+
 const cars=[
- {name:"Red Racer",cost:0,color:"#e22"},
- {name:"Blue Flash",cost:25,color:"#1677ff"},
- {name:"Green Beast",cost:60,color:"#20b84b"},
- {name:"Gold King",cost:120,color:"#ffb300"},
- {name:"Purple Turbo",cost:200,color:"#a63cff"},
- {name:"Neon Rocket",cost:350,color:"#00d9ff"}
+ {name:"Red Racer",cost:0,color:"#e52323",max:1},
+ {name:"Blue Flash",cost:40,color:"#1687ff",max:1.04},
+ {name:"Green Beast",cost:90,color:"#18c957",max:1.08},
+ {name:"Gold King",cost:170,color:"#ffb20f",max:1.12},
+ {name:"Purple Turbo",cost:280,color:"#a62dff",max:1.17},
+ {name:"Neon Rocket",cost:450,color:"#00d9ff",max:1.22}
 ];
-let selected=Number(localStorage.getItem("selectedCar")||0);
-let unlocked=JSON.parse(localStorage.getItem("unlockedCars")||"[0]");
 
-function updateCoins(){coinsEl.textContent=coins;document.getElementById("garageCoins").textContent=coins;localStorage.setItem("coins",coins)}
-function setCar(i){selected=i;player.style.setProperty("--car",cars[i].color);localStorage.setItem("selectedCar",i)}
-function renderGarage(){
- const grid=document.getElementById("carGrid");grid.innerHTML="";
- cars.forEach((c,i)=>{
-   const b=document.createElement("button");b.className="carBtn "+(!unlocked.includes(i)?"locked":"");
-   b.innerHTML=`<div class="carPreview" style="--c:${c.color}"><div class="miniCar"></div></div>
-   ${c.name}<br><small>${unlocked.includes(i)?(selected===i?"✓ SELECTED":"SELECT"):"🔒 "+c.cost+" COINS"}</small>`;
-   b.onclick=()=>{
-     if(unlocked.includes(i)){setCar(i);renderGarage();return}
-     if(coins>=c.cost){coins-=c.cost;unlocked.push(i);localStorage.setItem("unlockedCars",JSON.stringify(unlocked));updateCoins();setCar(i);renderGarage();playTone(880,.12)}
-     else playTone(160,.18,"square");
-   };
-   grid.appendChild(b);
- });
+function resize(){
+  DPR=Math.min(devicePixelRatio||1,2);
+  W=innerWidth;H=innerHeight;
+  canvas.width=Math.floor(W*DPR);canvas.height=Math.floor(H*DPR);
+  canvas.style.width=W+"px";canvas.style.height=H+"px";
+  ctx.setTransform(DPR,0,0,DPR,0,0);
+  roadW=Math.min(W*.58,620);
+  roadW=Math.max(300,roadW);
+  roadX=(W-roadW)/2;
+  playerX=Math.max(roadX+35,Math.min(roadX+roadW-35,playerX||W/2));
 }
-updateCoins();setCar(selected);renderGarage();
+addEventListener("resize",resize);resize();
 
-let audioCtx;
-function audio(){
- if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();
- if(audioCtx.state==="suspended")audioCtx.resume();
+function save(){
+ localStorage.setItem("tcxCoins",coins);
+ localStorage.setItem("tcxSelected",selected);
+ localStorage.setItem("tcxUnlocked",JSON.stringify(unlocked));
 }
-function playTone(freq,dur=.1,type="sine"){
- try{audio();let o=audioCtx.createOscillator(),g=audioCtx.createGain();
- o.type=type;o.frequency.value=freq;g.gain.setValueAtTime(.22,audioCtx.currentTime);
- g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+dur);o.connect(g);g.connect(audioCtx.destination);
- o.start();o.stop(audioCtx.currentTime+dur)}catch(e){}
+function updateHUD(){
+ $("score").textContent=Math.floor(score);
+ $("coins").textContent=coins;
+ $("garageCoins").textContent=coins;
+ $("distance").textContent=Math.floor(distance);
+ $("level").textContent=level;
+ $("hp").style.width=Math.max(0,hp)+"%";
+ $("nitro").style.width=Math.max(0,nitro)+"%";
 }
-function coinSound(){playTone(900,.08);setTimeout(()=>playTone(1350,.12),55)}
-function engineSound(){playTone(turbo?95:65,.08,"sawtooth")}
+function toast(t){
+ $("toast").textContent=t;$("toast").classList.add("show");
+ clearTimeout(toast.t);toast.t=setTimeout(()=>$("toast").classList.remove("show"),1300);
+}
+function beep(freq=440,d=.08,type="sine"){
+ try{
+  const A=new (window.AudioContext||window.webkitAudioContext)();
+  const o=A.createOscillator(),g=A.createGain();
+  o.type=type;o.frequency.value=freq;g.gain.value=.045;o.connect(g);g.connect(A.destination);
+  o.start();o.stop(A.currentTime+d);
+  setTimeout(()=>A.close(),d*1000+80);
+ }catch(e){}
+}
+function fullscreen(){
+ const el=document.documentElement;
+ if(!document.fullscreenElement && el.requestFullscreen) el.requestFullscreen({navigationUI:"hide"}).catch(()=>{});
+ if(screen.orientation?.lock) screen.orientation.lock("landscape").catch(()=>{});
+}
+document.addEventListener("fullscreenchange",()=>{setTimeout(resize,100)});
 
-function roadLines(){
- document.querySelectorAll(".roadLine").forEach(x=>x.remove());
- for(let i=0;i<6;i++){let d=document.createElement("div");d.className="roadLine";d.style.top=(i*145-100)+"px";gameArea.appendChild(d)}
+function drawRoad(dt){
+ ctx.fillStyle="#16752b";ctx.fillRect(0,0,W,H);
+ // grass stripes
+ const stripe=70;
+ for(let y=(-distance*1.2)%stripe;y<H;y+=stripe){
+  ctx.fillStyle=((Math.floor((y+distance*1.2)/stripe)&1)?"#198631":"#146d28");
+  ctx.fillRect(0,y,roadX, stripe);
+  ctx.fillRect(roadX+roadW,y,W-roadX-roadW,stripe);
+ }
+ ctx.fillStyle="#303238";ctx.fillRect(roadX,0,roadW,H);
+ ctx.fillStyle="#d8d8d8";ctx.fillRect(roadX,0,5,H);ctx.fillRect(roadX+roadW-5,0,5,H);
+ const dash=70,gap=65,off=(distance*4)% (dash+gap);
+ ctx.fillStyle="#fff";
+ for(let y=-off;y<H;y+=dash+gap){
+  ctx.fillRect(roadX+roadW/3-3,y,6,dash);
+  ctx.fillRect(roadX+roadW*2/3-3,y,6,dash);
+ }
+ // roadside lights
+ for(let y=(-distance*1.8)%120;y<H;y+=120){
+  ctx.fillStyle="#fff7a8";ctx.beginPath();ctx.arc(roadX-15,y+35,4,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.arc(roadX+roadW+15,y+35,4,0,Math.PI*2);ctx.fill();
+ }
 }
-function resetObjects(){objects.forEach(o=>o.el.remove());objects=[]}
+function roundedRect(x,y,w,h,r){
+ ctx.beginPath();ctx.roundRect(x,y,w,h,r);ctx.fill();
+}
+function drawCar(x,y,color,scale=1,enemy=false){
+ const w=48*scale,h=78*scale;
+ ctx.save();ctx.translate(x,y);
+ ctx.fillStyle="#0008";roundedRect(-w/2+3,4,w,h,10);
+ ctx.fillStyle=color;roundedRect(-w/2,0,w,h,10);
+ ctx.fillStyle="#111";ctx.fillRect(-w/2-4,13,7,20);ctx.fillRect(w/2-3,13,7,20);
+ ctx.fillRect(-w/2-4,h-31,7,20);ctx.fillRect(w/2-3,h-31,7,20);
+ ctx.fillStyle=enemy?"#a9e8ff":"#55d9ff";roundedRect(-w*.32,9,w*.64,25,7);
+ ctx.fillStyle="#ffdf22";roundedRect(-w*.3,h-18,w*.6,10,4);
+ ctx.fillStyle="#ff3535";roundedRect(-w*.3,h-36,w*.6,8,3);
+ if(!enemy){
+  ctx.fillStyle="#fff";ctx.globalAlpha=.45;ctx.fillRect(-w*.08,13,w*.16,22);
+ }
+ ctx.restore();
+}
+function drawCoin(x,y){
+ ctx.save();ctx.translate(x,y);
+ ctx.shadowBlur=16;ctx.shadowColor="#ffd21c";
+ const g=ctx.createRadialGradient(-5,-5,2,0,0,15);
+ g.addColorStop(0,"#fff9a8");g.addColorStop(.4,"#ffd21c");g.addColorStop(1,"#c87b00");
+ ctx.fillStyle=g;ctx.beginPath();ctx.arc(0,0,15,0,Math.PI*2);ctx.fill();
+ ctx.shadowBlur=0;ctx.strokeStyle="#fff4a0";ctx.lineWidth=2;ctx.stroke();
+ ctx.fillStyle="#9b6200";ctx.font="bold 15px Arial";ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText("$",0,1);
+ ctx.restore();
+}
 function spawn(type){
- let el=document.createElement("div");el.className=type;
- let x=20+Math.random()*(gameArea.clientWidth-100);
- el.style.left=x+"px";el.style.top="-100px";
- (type==="coin"?document.getElementById("coinLayer"):document.getElementById("enemyLayer")).appendChild(el);
- objects.push({el,type,x,y:-100});
+ const laneW=roadW/3;
+ const lane=Math.floor(Math.random()*3);
+ const x=roadX+laneW*(lane+.5);
+ objects.push({type,x,y:-100,rot:0,dead:false});
 }
-function startGame(){
- audio();menu.style.display="none";garage.style.display="none";gameOver.style.display="none";
- score=0;scoreEl.textContent=0;resetObjects();roadLines();running=true;turbo=false;
- playerX=(gameArea.clientWidth-58)/2;player.style.left=playerX+"px";lastSpawn=performance.now();
- cancelAnimationFrame(raf);raf=requestAnimationFrame(loop);engineSound();
+function reset(){
+ objects=[];score=0;distance=0;hp=100;nitro=100;level=1;
+ playerX=roadX+roadW/2;spawnTimer=0;turbo=false;
+ $("turbo").classList.remove("on");updateHUD();
 }
-function endGame(){
- running=false;turbo=false;document.getElementById("finalScore").textContent=score;
- document.getElementById("finalCoins").textContent=coins;gameOver.style.display="flex";
- playTone(75,.5,"square");
+function start(){
+ fullscreen();
+ $("menu").style.display="none";$("garage").style.display="none";$("over").style.display="none";$("pauseMenu").style.display="none";
+ reset();running=true;paused=false;last=performance.now();beep(600,.08);
+ requestAnimationFrame(loop);
+}
+function gameOver(){
+ if(!running)return;
+ running=false;turbo=false;$("turbo").classList.remove("on");
+ $("finalScore").textContent=Math.floor(score);
+ $("finalDistance").textContent=Math.floor(distance);
+ $("finalCoins").textContent=coins;
+ $("over").style.display="flex";beep(90,.35,"square");
+ save();
+}
+function pause(){
+ if(!running)return;
+ paused=true;$("pauseMenu").style.display="flex";
+}
+function resume(){
+ if(!running)return;
+ paused=false;$("pauseMenu").style.display="none";last=performance.now();requestAnimationFrame(loop);
 }
 function move(dir){
- if(!running)return;
- playerX+=dir*28;playerX=Math.max(8,Math.min(gameArea.clientWidth-66,playerX));
- player.style.left=playerX+"px";playTone(170,.05,"sawtooth");
+ if(!running||paused)return;
+ playerX+=dir*42;
+ playerX=Math.max(roadX+30,Math.min(roadX+roadW-30,playerX));
 }
-function hit(a,b){
- let r1=a.getBoundingClientRect(),r2=b.getBoundingClientRect();
- return !(r1.right<r2.left||r1.left>r2.right||r1.bottom<r2.top||r1.top>r2.bottom);
+function collision(a,b){
+ return Math.abs(a.x-b.x)<38 && Math.abs(a.y-b.y)<68;
 }
 function loop(t){
- if(!running)return;
- let dt=Math.min(32,t-(loop.last||t));loop.last=t;
- let currentSpeed=turbo?15:5;
- document.querySelectorAll(".roadLine").forEach(l=>{
-   let y=parseFloat(l.style.top)||0;y+=currentSpeed*dt/16;if(y>gameArea.clientHeight)y=-110;l.style.top=y+"px";
- });
- if(t-lastSpawn> (turbo?650:950)){spawn(Math.random()<.62?"coin":"enemy");lastSpawn=t}
- objects.forEach(o=>{
-   o.y+=currentSpeed*dt/16;o.el.style.top=o.y+"px";
-   if(hit(player,o.el)){
-     if(o.type==="coin"){
-       coins++;score+=5;updateCoins();coinSound();o.el.remove();o.dead=true;
-     }else{endGame();o.dead=true}
+ if(!running||paused)return;
+ const dt=Math.min(35,t-last);last=t;
+ const car=cars[selected];
+ const base=6.2*car.max;
+ if(turbo && nitro>0){nitro-=dt*.035}
+ else {nitro=Math.min(100,nitro+dt*.008)}
+ const sp=base*(turbo?2.15:1);
+ distance+=sp*dt*.055;
+ score+=sp*dt*.025;
+ level=1+Math.floor(distance/700);
+ drawRoad(dt);
+ spawnTimer+=dt;
+ const interval=Math.max(360,900-level*18-(turbo?230:0));
+ if(spawnTimer>interval){
+  spawn(Math.random()<.64?"coin":"enemy");spawnTimer=0;
+ }
+ for(const o of objects){
+  o.y+=sp*dt*.9;
+  if(o.type==="coin") drawCoin(o.x,o.y);
+  else drawCar(o.x,o.y,cars[(selected+1+Math.floor(o.y/250))%cars.length].color,.95,true);
+  if(collision({x:playerX,y:H-150},o)){
+   if(o.type==="coin"){
+    coins++;score+=25;o.dead=true;beep(900,.06);save();
+   }else{
+    hp-=34;o.dead=true;beep(110,.16,"square");
+    if(hp<=0){gameOver();return}
+    toast("⚠️ HIT! -34 HP");
    }
-   if(o.y>gameArea.clientHeight+120){o.el.remove();o.dead=true;if(o.type==="enemy"){score+=10;scoreEl.textContent=score}}
- });
+  }
+  if(o.y>H+100)o.dead=true;
+ }
  objects=objects.filter(o=>!o.dead);
- scoreEl.textContent=score;
- if(Math.random()<.025)engineSound();
- raf=requestAnimationFrame(loop);
+ drawCar(playerX,H-150,cars[selected].color,1,false);
+ updateHUD();
+ requestAnimationFrame(loop);
 }
-function holdButton(btn,dir){
- let down=false,timer;
- const start=e=>{e.preventDefault();audio();move(dir);down=true;timer=setInterval(()=>move(dir),100)};
- const stop=e=>{e.preventDefault();down=false;clearInterval(timer)};
- btn.addEventListener("pointerdown",start);btn.addEventListener("pointerup",stop);btn.addEventListener("pointercancel",stop);btn.addEventListener("pointerleave",stop);
+function renderGarage(){
+ const grid=$("carGrid");grid.innerHTML="";
+ cars.forEach((c,i)=>{
+  const b=document.createElement("button");
+  b.className="carBtn "+(!unlocked.includes(i)?"locked":"");
+  b.innerHTML=`<div class="preview" style="--c:${c.color}"></div>${c.name}<br><small>${unlocked.includes(i)?(selected===i?"✓ SELECTED":"SELECT"):"🔒 "+c.cost+" COINS"}</small>`;
+  b.onclick=()=>{
+   if(unlocked.includes(i)){selected=i;save();renderGarage();toast(c.name+" selected");return}
+   if(coins>=c.cost){
+    coins-=c.cost;unlocked.push(i);selected=i;save();renderGarage();updateHUD();beep(880,.12);toast("🚗 "+c.name+" unlocked!");
+   }else{beep(130,.12,"square");toast("Need "+(c.cost-coins)+" more coins")}
+  };
+  grid.appendChild(b);
+ });
+ $("garageCoins").textContent=coins;
 }
-holdButton(document.getElementById("leftBtn"),-1);holdButton(document.getElementById("rightBtn"),1);
+function openGarage(){fullscreen();$("menu").style.display="none";$("garage").style.display="flex";renderGarage()}
+function home(){
+ running=false;paused=false;objects=[];$("over").style.display="none";$("pauseMenu").style.display="none";$("garage").style.display="none";$("menu").style.display="flex";resize();
+}
+$("play").onclick=start;
+$("again").onclick=start;
+$("cars").onclick=openGarage;
+$("back").onclick=()=>{$("garage").style.display="none";$("menu").style.display="flex"};
+$("home").onclick=home;
+$("quit").onclick=home;
+$("pause").onclick=pause;
+$("resume").onclick=resume;
 
-document.getElementById("speedBtn").addEventListener("pointerdown",e=>{
- e.preventDefault();audio();turbo=!turbo;e.currentTarget.classList.toggle("active",turbo);
- playTone(turbo?420:180,.18,"sawtooth");engineSound();
+function bindHold(id,dir){
+ const b=$(id);let timer=null;
+ const down=e=>{e.preventDefault();fullscreen();move(dir);clearInterval(timer);timer=setInterval(()=>move(dir),85)};
+ const up=e=>{e.preventDefault();clearInterval(timer);timer=null};
+ b.addEventListener("pointerdown",down);b.addEventListener("pointerup",up);b.addEventListener("pointercancel",up);b.addEventListener("pointerleave",up);
+}
+bindHold("left",-1);bindHold("right",1);
+
+$("turbo").addEventListener("pointerdown",e=>{
+ e.preventDefault();fullscreen();
+ if(!running||paused)return;
+ turbo=!turbo && nitro>5;
+ $("turbo").classList.toggle("on",turbo);
+ beep(turbo?430:170,.12,"sawtooth");
 });
 document.addEventListener("keydown",e=>{
- if(e.key==="ArrowLeft")move(-1);if(e.key==="ArrowRight")move(1);
- if(e.code==="Space"){turbo=true;document.getElementById("speedBtn").classList.add("active")}
+ keys[e.key]=true;
+ if(e.key==="ArrowLeft")move(-1);
+ if(e.key==="ArrowRight")move(1);
+ if(e.code==="Space" && running){turbo=true;$("turbo").classList.add("on")}
+ if(e.key==="Escape" && running) paused?resume():pause();
 });
-document.addEventListener("keyup",e=>{if(e.code==="Space"){turbo=false;document.getElementById("speedBtn").classList.remove("active")}});
+document.addEventListener("keyup",e=>{
+ keys[e.key]=false;
+ if(e.code==="Space"){turbo=false;$("turbo").classList.remove("on")}
+});
+document.addEventListener("pointerdown",e=>{
+ if(e.target===canvas) fullscreen();
+},{passive:true});
 
-document.getElementById("startPlay").onclick=startGame;
-document.getElementById("restart").onclick=startGame;
-document.getElementById("openGarage").onclick=()=>{menu.style.display="none";garage.style.display="flex";renderGarage()};
-document.getElementById("closeGarage").onclick=()=>{garage.style.display="none";menu.style.display="flex"};
-document.getElementById("homeBtn").onclick=()=>{gameOver.style.display="none";menu.style.display="flex"};
-window.addEventListener("resize",()=>{if(!running)playerX=(gameArea.clientWidth-58)/2});
-roadLines();
+document.addEventListener("visibilitychange",()=>{
+ if(document.hidden && running&&!paused) pause();
+});
+window.addEventListener("orientationchange",()=>setTimeout(resize,150));
+renderGarage();updateHUD();drawRoad(0);
+})();
 </script>
 </body>
 </html>
