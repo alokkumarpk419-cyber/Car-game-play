@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
-<title>Color Rush Car World</title>
+<title>Color Cartoon Car World</title>
 
 <style>
 *{
@@ -17,8 +17,8 @@ html,body{
     width:100%;
     height:100%;
     overflow:hidden;
+    background:#60a5fa;
     font-family:Arial,sans-serif;
-    background:#38bdf8;
     touch-action:none;
 }
 
@@ -37,31 +37,31 @@ canvas{
     z-index:10;
     display:flex;
     justify-content:space-between;
-    gap:6px;
+    gap:5px;
     pointer-events:none;
 }
 
-.hudBox{
-    color:#fff;
-    background:rgba(0,0,0,.55);
-    border:2px solid rgba(255,255,255,.8);
+.hud{
+    color:white;
+    background:rgba(0,0,0,.58);
+    border:2px solid white;
     border-radius:14px;
-    padding:7px 10px;
+    padding:7px 9px;
+    font-size:12px;
     font-weight:bold;
-    font-size:13px;
-    text-shadow:1px 2px 3px #000;
+    text-shadow:2px 2px 3px #000;
 }
 
-#shopBtn,#pauseBtn{
+.topBtn{
     position:fixed;
-    top:62px;
+    top:58px;
     z-index:20;
     border:2px solid white;
     color:white;
-    border-radius:15px;
-    padding:9px 13px;
+    border-radius:14px;
+    padding:8px 11px;
     font-weight:bold;
-    box-shadow:0 5px 12px #0007;
+    box-shadow:0 5px 12px #0008;
 }
 
 #shopBtn{
@@ -78,97 +78,127 @@ canvas{
     position:fixed;
     left:0;
     right:0;
-    bottom:18px;
-    height:125px;
+    bottom:12px;
+    height:120px;
     z-index:30;
     pointer-events:none;
 }
 
-.control{
+/* LEFT CORNER */
+#leftBtn{
     position:absolute;
-    width:74px;
-    height:74px;
+    left:12px;
+    bottom:12px;
+}
+
+/* RIGHT CORNER */
+#rightBtn{
+    position:absolute;
+    right:12px;
+    bottom:12px;
+}
+
+/* CENTER SPEED */
+#speedControl{
+    position:absolute;
+    left:50%;
+    bottom:5px;
+    transform:translateX(-50%);
+    width:105px;
+    height:105px;
+    border-radius:50%;
+    background:linear-gradient(#22c55e,#15803d);
+    border:5px solid white;
+    box-shadow:0 6px 18px #0009;
+    color:white;
+    text-align:center;
+    pointer-events:auto;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+}
+
+#speedControl:active{
+    transform:translateX(-50%) scale(.92);
+}
+
+#speedNumber{
+    font-size:25px;
+    font-weight:900;
+    text-shadow:2px 2px 3px #000;
+}
+
+#speedText{
+    font-size:10px;
+    font-weight:bold;
+}
+
+.control{
+    width:78px;
+    height:78px;
     border-radius:50%;
     border:4px solid white;
-    color:white;
-    font-size:12px;
-    font-weight:900;
     display:flex;
     align-items:center;
     justify-content:center;
+    color:white;
+    font-weight:900;
+    font-size:12px;
     text-align:center;
-    box-shadow:0 6px 16px #0009;
-    user-select:none;
+    box-shadow:0 6px 18px #0009;
     pointer-events:auto;
+    user-select:none;
 }
 
 .control:active{
-    transform:scale(.88);
+    transform:scale(.86);
 }
 
-#left{
-    left:15px;
-    bottom:20px;
+#leftBtn{
     background:#2563eb;
 }
 
-#right{
-    left:100px;
-    bottom:20px;
+#rightBtn{
     background:#7c3aed;
 }
 
-#speedBox{
+#nitroBtn{
     position:absolute;
-    left:50%;
-    transform:translateX(-50%);
-    bottom:10px;
-    width:105px;
-    text-align:center;
-    pointer-events:none;
-}
-
-#speed{
-    font-size:26px;
-    font-weight:900;
-    color:white;
-    text-shadow:2px 2px 4px #000;
-}
-
-#speedLabel{
-    color:#fff;
-    font-size:11px;
-    font-weight:bold;
-}
-
-#gas{
     right:100px;
     bottom:20px;
-    background:#16a34a;
-}
-
-#nitro{
-    right:15px;
-    bottom:20px;
-    width:78px;
-    height:78px;
+    width:65px;
+    height:65px;
     background:#f97316;
+    font-size:11px;
 }
 
-#mudStatus{
+#parkBtn{
+    position:absolute;
+    left:100px;
+    bottom:20px;
+    width:65px;
+    height:65px;
+    background:#0891b2;
+    font-size:10px;
+}
+
+#status{
     position:fixed;
     left:50%;
+    bottom:140px;
     transform:translateX(-50%);
-    bottom:145px;
     z-index:20;
-    color:white;
-    background:rgba(0,0,0,.55);
+    display:none;
     padding:7px 14px;
+    color:white;
+    background:rgba(0,0,0,.6);
     border-radius:20px;
     font-size:12px;
     font-weight:bold;
-    display:none;
 }
+
+/* OVERLAYS */
 
 .overlay{
     position:fixed;
@@ -177,37 +207,37 @@ canvas{
     display:flex;
     justify-content:center;
     align-items:center;
-    background:linear-gradient(135deg,#ef4444,#7c3aed,#2563eb,#16a34a);
+    background:linear-gradient(135deg,#ef4444,#8b5cf6,#2563eb,#22c55e);
 }
 
 .panel{
-    width:min(92%,420px);
+    width:min(92%,430px);
     max-height:90vh;
     overflow:auto;
-    padding:25px;
-    border-radius:28px;
-    background:rgba(0,0,0,.65);
-    border:3px solid white;
+    background:rgba(0,0,0,.68);
     color:white;
+    border:3px solid white;
+    border-radius:28px;
+    padding:25px;
     text-align:center;
     box-shadow:0 20px 60px #0009;
 }
 
 .panel h1{
     font-size:34px;
-    margin-bottom:8px;
+    margin-bottom:10px;
     text-shadow:3px 3px #000;
 }
 
 .mainBtn{
     border:0;
-    padding:14px 28px;
-    border-radius:25px;
     color:white;
-    font-weight:bold;
-    font-size:18px;
     background:#ef4444;
-    margin:7px;
+    padding:13px 25px;
+    border-radius:25px;
+    font-size:17px;
+    font-weight:bold;
+    margin:6px;
 }
 
 .carGrid{
@@ -218,37 +248,35 @@ canvas{
 }
 
 .carCard{
-    padding:12px;
-    border-radius:18px;
     background:rgba(255,255,255,.13);
-    border:2px solid rgba(255,255,255,.3);
+    border:2px solid rgba(255,255,255,.35);
+    border-radius:18px;
+    padding:12px;
 }
 
 .carPreview{
-    width:55px;
-    height:82px;
-    margin:5px auto 8px;
-    border-radius:15px;
+    width:50px;
+    height:75px;
+    margin:4px auto 8px;
+    border-radius:14px;
     border:3px solid white;
 }
 
 .buyBtn{
     border:0;
-    padding:8px 12px;
     border-radius:15px;
+    padding:7px 9px;
     color:white;
     background:#16a34a;
     font-weight:bold;
 }
 
-.locked{
+.disabled{
     background:#6b7280;
 }
 
-#shop{
-    display:none;
-}
-
+#shop,
+#pauseScreen,
 #gameOver{
     display:none;
 }
@@ -259,555 +287,919 @@ canvas{
 
 <canvas id="game"></canvas>
 
+<!-- HUD -->
+
 <div id="hud">
-    <div class="hudBox">🪙 <span id="coins">0</span></div>
-    <div class="hudBox">🏆 <span id="score">0</span></div>
-    <div class="hudBox">🚗 <span id="carName">RED SPORT</span></div>
+    <div class="hud">🪙 <span id="coinDisplay">0</span></div>
+    <div class="hud">🏆 <span id="scoreDisplay">0</span></div>
+    <div class="hud">❤️ <span id="lifeDisplay">3</span></div>
+    <div class="hud">🚗 <span id="carDisplay">RED</span></div>
 </div>
 
-<button id="shopBtn">🚗 SHOP</button>
-<button id="pauseBtn">⏸ PAUSE</button>
+<button class="topBtn" id="shopBtn">🚗 SHOP</button>
+<button class="topBtn" id="pauseBtn">⏸ PAUSE</button>
 
-<div id="mudStatus"></div>
+<div id="status"></div>
+
+<!-- CONTROLS -->
 
 <div id="controls">
-    <div class="control" id="left">◀<br>LEFT</div>
-    <div class="control" id="right">RIGHT<br>▶</div>
 
-    <div id="speedBox">
-        <div id="speed">0</div>
-        <div id="speedLabel">KM/H</div>
+    <div class="control" id="leftBtn">
+        ◀<br>LEFT
     </div>
 
-    <div class="control" id="gas">▲<br>SPEED</div>
-    <div class="control" id="nitro">🔥<br>NITRO</div>
+    <div class="control" id="parkBtn">
+        🅿️<br>PARK
+    </div>
+
+    <div id="speedControl">
+        <div id="speedNumber">0</div>
+        <div id="speedText">KM/H</div>
+    </div>
+
+    <div class="control" id="nitroBtn">
+        🔥<br>NITRO
+    </div>
+
+    <div class="control" id="rightBtn">
+        RIGHT<br>▶
+    </div>
+
 </div>
 
 <!-- START -->
+
 <div class="overlay" id="startScreen">
     <div class="panel">
-        <h1>🏎️ COLOR RUSH</h1>
-        <p>Collect coins • Buy cars • Race • Wash your car</p>
-        <button class="mainBtn" id="startBtn">START RACE 🚀</button>
-        <button class="mainBtn" id="openShopStart">CAR SHOP 🚗</button>
+        <h1>🏎️ COLOR CAR WORLD</h1>
+        <p>Race • Collect Coins • Buy Cars • Wash Your Car</p>
+
+        <button class="mainBtn" id="startBtn">
+            START RACE 🚀
+        </button>
+
+        <button class="mainBtn" id="startShopBtn">
+            🚗 CAR SHOP
+        </button>
     </div>
 </div>
 
 <!-- SHOP -->
+
 <div class="overlay" id="shop">
     <div class="panel">
+
         <h1>🚗 CAR SHOP</h1>
-        <p>Coins: 🪙 <b id="shopCoins">0</b></p>
+
+        <p>
+            Your Coins:
+            🪙 <b id="shopCoins">0</b>
+        </p>
 
         <div class="carGrid" id="carGrid"></div>
 
-        <button class="mainBtn" id="closeShop">CLOSE</button>
+        <button class="mainBtn" id="closeShop">
+            CLOSE
+        </button>
+
     </div>
 </div>
 
 <!-- PAUSE -->
-<div class="overlay" id="pauseScreen" style="display:none">
+
+<div class="overlay" id="pauseScreen">
+
     <div class="panel">
+
         <h1>⏸ PAUSED</h1>
-        <button class="mainBtn" id="resumeBtn">▶ RESUME</button>
-        <button class="mainBtn" id="pauseShop">🚗 SHOP</button>
+
+        <button class="mainBtn" id="resumeBtn">
+            ▶ RESUME
+        </button>
+
+        <button class="mainBtn" id="pauseShopBtn">
+            🚗 SHOP
+        </button>
+
     </div>
+
+</div>
+
+<!-- GAME OVER -->
+
+<div class="overlay" id="gameOver">
+
+    <div class="panel">
+
+        <h1>💥 GAME OVER</h1>
+
+        <p>
+            Your car crashed 3 times!
+        </p>
+
+        <h2>
+            🏆 Score:
+            <span id="finalScore">0</span>
+        </h2>
+
+        <p>
+            🪙 Coins:
+            <span id="finalCoins">0</span>
+        </p>
+
+        <button class="mainBtn" id="restartBtn">
+            🔄 PLAY AGAIN
+        </button>
+
+        <button class="mainBtn" id="gameOverShop">
+            🚗 CAR SHOP
+        </button>
+
+    </div>
+
 </div>
 
 <script>
+
+/* =========================================
+   CANVAS
+========================================= */
+
 const canvas=document.getElementById("game");
 const ctx=canvas.getContext("2d");
 
-let W,H,dpr;
+let W=innerWidth;
+let H=innerHeight;
+let DPR=Math.min(devicePixelRatio||1,2);
 
 function resize(){
-    dpr=Math.min(devicePixelRatio||1,2);
 
     W=innerWidth;
     H=innerHeight;
 
-    canvas.width=W*dpr;
-    canvas.height=H*dpr;
+    canvas.width=W*DPR;
+    canvas.height=H*DPR;
+
     canvas.style.width=W+"px";
     canvas.style.height=H+"px";
 
-    ctx.setTransform(dpr,0,0,dpr,0,0);
+    ctx.setTransform(DPR,0,0,DPR,0,0);
 }
 
 addEventListener("resize",resize);
 resize();
 
-/* ---------------- SAVE DATA ---------------- */
 
-const defaultCars=[
-    {
-        id:0,
-        name:"RED SPORT",
-        color:"#ef4444",
-        price:0,
-        speed:1,
-        handling:1,
-        nitro:1
-    },
-    {
-        id:1,
-        name:"BLUE GT",
-        color:"#2563eb",
-        price:500,
-        speed:1.15,
-        handling:1.05,
-        nitro:1.1
-    },
-    {
-        id:2,
-        name:"YELLOW X",
-        color:"#facc15",
-        price:1000,
-        speed:1.25,
-        handling:1.1,
-        nitro:1.2
-    },
-    {
-        id:3,
-        name:"GREEN PRO",
-        color:"#22c55e",
-        price:1500,
-        speed:1.35,
-        handling:1.18,
-        nitro:1.25
-    },
-    {
-        id:4,
-        name:"PURPLE MAX",
-        color:"#a855f7",
-        price:2500,
-        speed:1.5,
-        handling:1.25,
-        nitro:1.35
-    },
-    {
-        id:5,
-        name:"ORANGE FIRE",
-        color:"#f97316",
-        price:4000,
-        speed:1.7,
-        handling:1.35,
-        nitro:1.5
-    }
+/* =========================================
+   CARS
+========================================= */
+
+const cars=[
+
+{
+    id:0,
+    name:"RED SPORT",
+    color:"#ef4444",
+    price:0,
+    speed:1,
+    handling:1,
+    nitro:1
+},
+
+{
+    id:1,
+    name:"BLUE GT",
+    color:"#2563eb",
+    price:500,
+    speed:1.12,
+    handling:1.08,
+    nitro:1.1
+},
+
+{
+    id:2,
+    name:"YELLOW X",
+    color:"#facc15",
+    price:1000,
+    speed:1.25,
+    handling:1.12,
+    nitro:1.2
+},
+
+{
+    id:3,
+    name:"GREEN PRO",
+    color:"#22c55e",
+    price:1500,
+    speed:1.35,
+    handling:1.2,
+    nitro:1.3
+},
+
+{
+    id:4,
+    name:"PURPLE MAX",
+    color:"#a855f7",
+    price:2500,
+    speed:1.5,
+    handling:1.3,
+    nitro:1.4
+},
+
+{
+    id:5,
+    name:"ORANGE FIRE",
+    color:"#f97316",
+    price:4000,
+    speed:1.7,
+    handling:1.4,
+    nitro:1.55
+}
+
 ];
 
-let saved=JSON.parse(localStorage.getItem("colorRushSave")||"null");
 
-if(!saved){
-    saved={
+/* =========================================
+   SAVE
+========================================= */
+
+let save=JSON.parse(
+    localStorage.getItem("cartoonCarSave")||"null"
+);
+
+if(!save){
+
+    save={
         coins:0,
         owned:[0],
         selected:0
     };
 }
 
-let gameCoins=saved.coins||0;
-let selected=saved.selected||0;
-let owned=saved.owned||[0];
+let coinsBalance=save.coins||0;
+let ownedCars=save.owned||[0];
+let selectedCar=save.selected||0;
 
-function saveGame(){
-    localStorage.setItem("colorRushSave",JSON.stringify({
-        coins:gameCoins,
-        owned:owned,
-        selected:selected
-    }));
+function saveData(){
+
+    localStorage.setItem(
+        "cartoonCarSave",
+        JSON.stringify({
+            coins:coinsBalance,
+            owned:ownedCars,
+            selected:selectedCar
+        })
+    );
 }
 
-function currentCar(){
-    return defaultCars.find(c=>c.id===selected)||defaultCars[0];
+function getCar(){
+
+    return cars.find(
+        c=>c.id===selectedCar
+    )||cars[0];
 }
 
-/* ---------------- GAME ---------------- */
 
-let running=false;
-let paused=false;
+/* =========================================
+   GAME STATE
+========================================= */
+
+let gameRunning=false;
+let gamePaused=false;
 
 let score=0;
-let roadScroll=0;
+let lives=3;
 
-let roadCurve=0;
-let curveTarget=0;
+let roadOffset=0;
 
 let player={
-    x:0,
-    y:0,
+    x:W/2,
+    y:H*.57,
     speed:0,
     angle:0,
     dirt:0
 };
 
 let traffic=[];
-let coins=[];
-let puddles=[];
-let muds=[];
+let coinObjects=[];
+let waterObjects=[];
+let mudObjects=[];
 let particles=[];
 
-let spawnTimer=0;
-let coinTimer=0;
-let surfaceTimer=0;
+let trafficTimer=80;
+let coinTimer=40;
+let surfaceTimer=200;
 
-const keys={
+let keys={
     left:false,
     right:false,
-    gas:false,
+    speed:false,
     nitro:false
 };
 
-function startGame(){
 
-    running=true;
-    paused=false;
-
-    score=0;
-    roadScroll=0;
-
-    player.x=W/2;
-    player.y=H*.58;
-    player.speed=0;
-    player.angle=0;
-    player.dirt=0;
-
-    traffic=[];
-    coins=[];
-    puddles=[];
-    muds=[];
-    particles=[];
-
-    document.getElementById("startScreen").style.display="none";
-    document.getElementById("pauseScreen").style.display="none";
-
-    requestFullscreen();
-}
-
-async function requestFullscreen(){
-    try{
-        if(document.documentElement.requestFullscreen)
-            await document.documentElement.requestFullscreen();
-    }catch(e){}
-}
-
-/* ---------------- ROAD ---------------- */
+/* =========================================
+   STRAIGHT ROAD
+========================================= */
 
 function roadWidth(){
-    return Math.min(W*.72,620);
+
+    return Math.min(
+        W*.70,
+        600
+    );
 }
 
-function roadCenter(y){
-    return W/2 + roadCurve*Math.sin((y+roadScroll)*.004);
+function roadLeft(){
+
+    return W/2-roadWidth()/2;
 }
 
-function roadLeft(y){
-    return roadCenter(y)-roadWidth()/2;
+function roadRight(){
+
+    return W/2+roadWidth()/2;
 }
 
-function roadRight(y){
-    return roadCenter(y)+roadWidth()/2;
-}
+
+/* =========================================
+   DRAW WORLD
+========================================= */
 
 function drawWorld(){
 
     /* SKY */
 
-    let sky=ctx.createLinearGradient(0,0,0,H);
+    let sky=ctx.createLinearGradient(
+        0,0,0,H
+    );
 
     sky.addColorStop(0,"#38bdf8");
-    sky.addColorStop(.55,"#93c5fd");
+    sky.addColorStop(.6,"#93c5fd");
     sky.addColorStop(1,"#dbeafe");
 
     ctx.fillStyle=sky;
     ctx.fillRect(0,0,W,H);
 
+
     /* SUN */
 
     ctx.fillStyle="#fde047";
+
     ctx.beginPath();
-    ctx.arc(W*.82,80,43,0,Math.PI*2);
+
+    ctx.arc(
+        W*.82,
+        75,
+        42,
+        0,
+        Math.PI*2
+    );
+
     ctx.fill();
+
 
     /* GRASS */
 
     ctx.fillStyle="#22c55e";
-    ctx.fillRect(0,0,W,H);
+
+    ctx.fillRect(
+        0,
+        0,
+        W,
+        H
+    );
+
 
     /* ROAD */
 
-    ctx.beginPath();
+    let left=roadLeft();
+    let right=roadRight();
 
-    for(let y=0;y<=H;y+=20){
-        let x=roadLeft(y);
-        if(y===0)ctx.moveTo(x,y);
-        else ctx.lineTo(x,y);
+    ctx.fillStyle="#4b5563";
+
+    ctx.fillRect(
+        left,
+        0,
+        roadWidth(),
+        H
+    );
+
+
+    /* ROAD EDGE */
+
+    ctx.fillStyle="#ffffff";
+
+    ctx.fillRect(
+        left,
+        0,
+        7,
+        H
+    );
+
+    ctx.fillRect(
+        right-7,
+        0,
+        7,
+        H
+    );
+
+
+    /* RED/WHITE CURBS */
+
+    let block=45;
+
+    for(
+        let y=-block;
+        y<H+block;
+        y+=block
+    ){
+
+        let yy=
+            y+
+            (roadOffset%block);
+
+        ctx.fillStyle="#ef4444";
+
+        ctx.fillRect(
+            left-15,
+            yy,
+            15,
+            22
+        );
+
+        ctx.fillRect(
+            right,
+            yy,
+            15,
+            22
+        );
+
+        ctx.fillStyle="#ffffff";
+
+        ctx.fillRect(
+            left-15,
+            yy+22,
+            15,
+            23
+        );
+
+        ctx.fillRect(
+            right,
+            yy+22,
+            15,
+            23
+        );
     }
 
-    for(let y=H;y>=0;y-=20){
-        ctx.lineTo(roadRight(y),y);
+
+    /* CENTER LANE */
+
+    ctx.fillStyle="#fde047";
+
+    for(
+        let y=-70;
+        y<H+70;
+        y+=105
+    ){
+
+        let yy=
+            y+
+            (roadOffset%105);
+
+        ctx.fillRect(
+            W/2-4,
+            yy,
+            8,
+            55
+        );
     }
 
-    ctx.closePath();
 
-    let roadGradient=ctx.createLinearGradient(0,0,W,0);
-    roadGradient.addColorStop(0,"#374151");
-    roadGradient.addColorStop(.5,"#6b7280");
-    roadGradient.addColorStop(1,"#374151");
+    /* TREES */
 
-    ctx.fillStyle=roadGradient;
-    ctx.fill();
+    for(
+        let y=-100;
+        y<H+120;
+        y+=145
+    ){
 
-    /* ROAD EDGES */
+        let yy=
+            y+
+            (roadOffset*.55%145);
 
-    ctx.lineWidth=8;
-    ctx.strokeStyle="#ffffff";
+        drawTree(
+            left-65,
+            yy
+        );
 
-    ctx.beginPath();
-
-    for(let y=0;y<=H;y+=15){
-        let x=roadLeft(y);
-        if(y===0)ctx.moveTo(x,y);
-        else ctx.lineTo(x,y);
+        drawTree(
+            right+65,
+            yy+60
+        );
     }
-
-    ctx.stroke();
-
-    ctx.beginPath();
-
-    for(let y=0;y<=H;y+=15){
-        let x=roadRight(y);
-        if(y===0)ctx.moveTo(x,y);
-        else ctx.lineTo(x,y);
-    }
-
-    ctx.stroke();
-
-    /* LANE LINES */
-
-    ctx.lineWidth=6;
-    ctx.setLineDash([45,55]);
-    ctx.lineDashOffset=roadScroll;
-
-    ctx.strokeStyle="#fde047";
-
-    for(let lane=1;lane<3;lane++){
-
-        ctx.beginPath();
-
-        for(let y=0;y<=H;y+=20){
-
-            let x=roadLeft(y)+roadWidth()*lane/3;
-
-            if(y===0)ctx.moveTo(x,y);
-            else ctx.lineTo(x,y);
-        }
-
-        ctx.stroke();
-    }
-
-    ctx.setLineDash([]);
-
-    drawEnvironment();
 }
 
-function drawEnvironment(){
 
-    let gap=130;
-
-    for(let y=-100;y<H+150;y+=gap){
-
-        let yy=y+(roadScroll*.55%gap);
-
-        let center=roadCenter(yy);
-
-        drawTree(center-roadWidth()/2-75,yy);
-        drawTree(center+roadWidth()/2+75,yy+50);
-
-        if(Math.floor((y+500)/gap)%3===0){
-            drawBush(center-roadWidth()/2-35,yy+60);
-            drawBush(center+roadWidth()/2+35,yy+30);
-        }
-    }
-}
+/* =========================================
+   TREE
+========================================= */
 
 function drawTree(x,y){
 
     ctx.fillStyle="#92400e";
-    ctx.fillRect(x-6,y+20,12,42);
 
-    ctx.fillStyle="#166534";
+    ctx.fillRect(
+        x-6,
+        y+20,
+        12,
+        45
+    );
+
+    ctx.fillStyle="#15803d";
 
     ctx.beginPath();
-    ctx.arc(x,y,31,0,Math.PI*2);
+
+    ctx.arc(
+        x,
+        y,
+        30,
+        0,
+        Math.PI*2
+    );
+
     ctx.fill();
 
     ctx.fillStyle="#22c55e";
 
     ctx.beginPath();
-    ctx.arc(x-15,y+8,23,0,Math.PI*2);
+
+    ctx.arc(
+        x-14,
+        y+8,
+        21,
+        0,
+        Math.PI*2
+    );
+
     ctx.fill();
 
     ctx.fillStyle="#4ade80";
 
     ctx.beginPath();
-    ctx.arc(x+12,y-7,17,0,Math.PI*2);
+
+    ctx.arc(
+        x+13,
+        y-7,
+        17,
+        0,
+        Math.PI*2
+    );
+
     ctx.fill();
 }
 
-function drawBush(x,y){
 
-    ctx.fillStyle="#15803d";
-
-    ctx.beginPath();
-    ctx.arc(x,y,18,0,Math.PI*2);
-    ctx.fill();
-
-    ctx.fillStyle="#4ade80";
-
-    ctx.beginPath();
-    ctx.arc(x-10,y,12,0,Math.PI*2);
-    ctx.fill();
-}
-
-/* ---------------- CAR ---------------- */
+/* =========================================
+   PLAYER CAR
+========================================= */
 
 function drawPlayer(){
 
-    let car=currentCar();
+    let car=getCar();
 
     ctx.save();
 
-    ctx.translate(player.x,player.y);
-    ctx.rotate(player.angle);
+    ctx.translate(
+        player.x,
+        player.y
+    );
 
-    /* shadow */
+    ctx.rotate(
+        player.angle
+    );
 
-    ctx.fillStyle="#0008";
+
+    /* SHADOW */
+
+    ctx.fillStyle="#0007";
 
     ctx.beginPath();
-    ctx.ellipse(0,12,39,62,0,0,Math.PI*2);
+
+    ctx.ellipse(
+        0,
+        15,
+        40,
+        65,
+        0,
+        0,
+        Math.PI*2
+    );
+
     ctx.fill();
 
-    /* wheels */
+
+    /* WHEELS */
 
     ctx.fillStyle="#111827";
 
-    ctx.fillRect(-34,-42,12,30);
-    ctx.fillRect(22,-42,12,30);
-    ctx.fillRect(-34,15,12,30);
-    ctx.fillRect(22,15,12,30);
+    ctx.fillRect(
+        -34,
+        -40,
+        12,
+        28
+    );
 
-    /* body */
+    ctx.fillRect(
+        22,
+        -40,
+        12,
+        28
+    );
 
-    let g=ctx.createLinearGradient(-30,0,30,0);
+    ctx.fillRect(
+        -34,
+        15,
+        12,
+        28
+    );
 
-    g.addColorStop(0,"#111827");
-    g.addColorStop(.18,car.color);
-    g.addColorStop(.5,"#ffffff");
-    g.addColorStop(.58,car.color);
-    g.addColorStop(1,"#111827");
+    ctx.fillRect(
+        22,
+        15,
+        12,
+        28
+    );
 
-    ctx.fillStyle=g;
 
-    roundRect(-29,-55,58,110,16);
+    /* BODY */
+
+    let gradient=
+        ctx.createLinearGradient(
+            -32,
+            0,
+            32,
+            0
+        );
+
+    gradient.addColorStop(
+        0,
+        "#7f1d1d"
+    );
+
+    gradient.addColorStop(
+        .2,
+        car.color
+    );
+
+    gradient.addColorStop(
+        .5,
+        "#ffffff"
+    );
+
+    gradient.addColorStop(
+        .58,
+        car.color
+    );
+
+    gradient.addColorStop(
+        1,
+        "#7f1d1d"
+    );
+
+    ctx.fillStyle=gradient;
+
+    roundRect(
+        -30,
+        -55,
+        60,
+        110,
+        17
+    );
+
     ctx.fill();
 
-    /* dirt overlay */
+
+    /* MUD */
 
     if(player.dirt>0){
 
-        ctx.fillStyle=`rgba(101,55,20,${player.dirt/100})`;
+        ctx.fillStyle=
+            `rgba(105,60,20,${player.dirt/100})`;
 
-        roundRect(-28,-54,56,108,15);
+        roundRect(
+            -29,
+            -54,
+            58,
+            108,
+            16
+        );
+
         ctx.fill();
     }
 
-    /* windows */
+
+    /* WINDOWS */
 
     ctx.fillStyle="#0ea5e9";
-    roundRect(-18,-25,36,35,9);
+
+    roundRect(
+        -19,
+        -26,
+        38,
+        37,
+        9
+    );
+
     ctx.fill();
 
-    ctx.fillStyle="#bae6fd";
-    ctx.fillRect(-13,-20,10,23);
 
-    /* center stripe */
+    ctx.fillStyle="#bae6fd";
+
+    ctx.fillRect(
+        -14,
+        -21,
+        11,
+        25
+    );
+
+
+    /* YELLOW STRIPE */
 
     ctx.fillStyle="#facc15";
-    ctx.fillRect(-3,-52,6,97);
 
-    /* headlights */
+    ctx.fillRect(
+        -3,
+        -52,
+        6,
+        96
+    );
+
+
+    /* HEADLIGHTS */
 
     ctx.fillStyle="#ffffff";
-    ctx.shadowBlur=18;
+
+    ctx.shadowBlur=20;
     ctx.shadowColor="#ffffff";
 
-    ctx.fillRect(-22,-50,13,8);
-    ctx.fillRect(9,-50,13,8);
+    ctx.fillRect(
+        -22,
+        -50,
+        13,
+        8
+    );
+
+    ctx.fillRect(
+        9,
+        -50,
+        13,
+        8
+    );
 
     ctx.shadowBlur=0;
 
-    /* bumper */
+
+    /* FRONT BUMPER */
 
     ctx.fillStyle="#111827";
-    roundRect(-20,45,40,8,4);
+
+    roundRect(
+        -21,
+        45,
+        42,
+        8,
+        4
+    );
+
     ctx.fill();
 
-    /* water shine */
+
+    /* CLEAN SHINE */
 
     if(player.dirt<10){
 
         ctx.fillStyle="rgba(255,255,255,.5)";
-        ctx.fillRect(-19,10,7,25);
-        ctx.fillRect(12,10,7,25);
+
+        ctx.fillRect(
+            -19,
+            10,
+            7,
+            25
+        );
+
+        ctx.fillRect(
+            12,
+            10,
+            7,
+            25
+        );
     }
+
 
     /* NITRO */
 
-    if(keys.nitro && player.speed>2){
+    if(
+        keys.nitro &&
+        player.speed>2
+    ){
 
         ctx.fillStyle="#f97316";
 
         ctx.beginPath();
+
         ctx.moveTo(-15,53);
         ctx.lineTo(-4,53);
-        ctx.lineTo(-10,90+Math.random()*15);
+        ctx.lineTo(
+            -10,
+            90+Math.random()*15
+        );
+
         ctx.fill();
 
+
         ctx.beginPath();
+
         ctx.moveTo(4,53);
         ctx.lineTo(15,53);
-        ctx.lineTo(10,90+Math.random()*15);
+        ctx.lineTo(
+            10,
+            90+Math.random()*15
+        );
+
         ctx.fill();
     }
 
     ctx.restore();
 }
 
-function roundRect(x,y,w,h,r){
+
+function roundRect(
+    x,
+    y,
+    w,
+    h,
+    r
+){
 
     ctx.beginPath();
-    ctx.roundRect(x,y,w,h,r);
+
+    ctx.roundRect(
+        x,
+        y,
+        w,
+        h,
+        r
+    );
 }
 
-/* ---------------- TRAFFIC ---------------- */
+
+/* =========================================
+   TRAFFIC
+========================================= */
 
 function spawnTraffic(){
 
-    let lanes=[.18,.5,.82];
+    let lanes=[
+        .25,
+        .5,
+        .75
+    ];
 
-    let lane=lanes[Math.floor(Math.random()*lanes.length)];
-
-    let y=-130;
+    let lane=
+        lanes[
+            Math.floor(
+                Math.random()*lanes.length
+            )
+        ];
 
     traffic.push({
-        x:roadLeft(y)+roadWidth()*lane,
-        y:y,
-        color:["#2563eb","#facc15","#22c55e","#a855f7","#f97316"][Math.floor(Math.random()*5)],
-        speed:1+Math.random()*3
+
+        x:
+            roadLeft()+
+            roadWidth()*lane,
+
+        y:-120,
+
+        color:
+            [
+                "#2563eb",
+                "#facc15",
+                "#22c55e",
+                "#a855f7",
+                "#f97316"
+            ][
+                Math.floor(
+                    Math.random()*5
+                )
+            ],
+
+        speed:
+            1+
+            Math.random()*2
     });
 }
+
 
 function drawTraffic(){
 
@@ -815,135 +1207,258 @@ function drawTraffic(){
 
         ctx.save();
 
-        ctx.translate(t.x,t.y);
+        ctx.translate(
+            t.x,
+            t.y
+        );
+
+        /* wheels */
 
         ctx.fillStyle="#111827";
 
-        ctx.fillRect(-30,-40,11,25);
-        ctx.fillRect(19,-40,11,25);
-        ctx.fillRect(-30,15,11,25);
-        ctx.fillRect(19,15,11,25);
+        ctx.fillRect(
+            -30,
+            -38,
+            11,
+            25
+        );
+
+        ctx.fillRect(
+            19,
+            -38,
+            11,
+            25
+        );
+
+        ctx.fillRect(
+            -30,
+            15,
+            11,
+            25
+        );
+
+        ctx.fillRect(
+            19,
+            15,
+            11,
+            25
+        );
+
+        /* body */
 
         ctx.fillStyle=t.color;
 
-        roundRect(-27,-48,54,96,13);
+        roundRect(
+            -27,
+            -48,
+            54,
+            96,
+            13
+        );
+
         ctx.fill();
+
+        /* glass */
 
         ctx.fillStyle="#38bdf8";
 
-        roundRect(-18,-22,36,31,7);
+        roundRect(
+            -18,
+            -22,
+            36,
+            31,
+            7
+        );
+
         ctx.fill();
-
-        ctx.fillStyle="#fff";
-
-        ctx.fillRect(-20,-43,12,7);
-        ctx.fillRect(8,-43,12,7);
 
         ctx.restore();
     });
 }
 
-/* ---------------- COINS ---------------- */
+
+/* =========================================
+   COINS
+========================================= */
 
 function spawnCoin(){
 
-    let lanes=[.18,.5,.82];
+    let lane=
+        [
+            .25,
+            .5,
+            .75
+        ][
+            Math.floor(
+                Math.random()*3
+            )
+        ];
 
-    let lane=lanes[Math.floor(Math.random()*lanes.length)];
+    coinObjects.push({
 
-    let y=-30;
+        x:
+            roadLeft()+
+            roadWidth()*lane,
 
-    coins.push({
-        x:roadLeft(y)+roadWidth()*lane,
-        y:y,
+        y:-30,
+
         spin:0
     });
 }
 
+
 function drawCoins(){
 
-    coins.forEach(c=>{
+    coinObjects.forEach(c=>{
 
         ctx.save();
 
-        ctx.translate(c.x,c.y);
+        ctx.translate(
+            c.x,
+            c.y
+        );
+
         ctx.rotate(c.spin);
 
         ctx.fillStyle="#facc15";
-        ctx.shadowBlur=18;
+
+        ctx.shadowBlur=15;
         ctx.shadowColor="#facc15";
 
         ctx.beginPath();
-        ctx.arc(0,0,12,0,Math.PI*2);
+
+        ctx.arc(
+            0,
+            0,
+            12,
+            0,
+            Math.PI*2
+        );
+
         ctx.fill();
 
         ctx.shadowBlur=0;
 
         ctx.fillStyle="#92400e";
+
         ctx.font="bold 13px Arial";
+
         ctx.textAlign="center";
         ctx.textBaseline="middle";
-        ctx.fillText("₹",0,1);
+
+        ctx.fillText(
+            "₹",
+            0,
+            1
+        );
 
         ctx.restore();
     });
 }
 
-/* ---------------- WATER & MUD ---------------- */
+
+/* =========================================
+   WATER / MUD
+========================================= */
 
 function spawnSurface(){
 
-    let y=-80;
+    let y=-60;
 
-    let type=Math.random()<.5?"water":"mud";
+    let type=
+        Math.random()<.5
+        ?"water"
+        :"mud";
 
-    let obj={
-        x:roadCenter(y),
+    let object={
+
+        x:W/2,
         y:y,
-        width:Math.min(roadWidth()*.55,270),
-        height:45,
+
+        width:
+            Math.min(
+                roadWidth()*.65,
+                290
+            ),
+
+        height:50,
         type:type
     };
 
-    if(type==="water")puddles.push(obj);
-    else muds.push(obj);
+    if(type==="water")
+        waterObjects.push(object);
+    else
+        mudObjects.push(object);
 }
+
 
 function drawSurfaces(){
 
-    puddles.forEach(p=>{
+    /* WATER */
 
-        ctx.fillStyle="rgba(14,165,233,.75)";
+    waterObjects.forEach(w=>{
+
+        ctx.fillStyle="#38bdf8";
 
         ctx.beginPath();
-        ctx.ellipse(p.x,p.y,p.width/2,p.height/2,0,0,Math.PI*2);
+
+        ctx.ellipse(
+            w.x,
+            w.y,
+            w.width/2,
+            w.height/2,
+            0,
+            0,
+            Math.PI*2
+        );
+
         ctx.fill();
 
         ctx.strokeStyle="#bae6fd";
         ctx.lineWidth=3;
 
-        ctx.beginPath();
-        ctx.ellipse(p.x,p.y,p.width/2,p.height/2,0,0,Math.PI*2);
         ctx.stroke();
     });
 
-    muds.forEach(m=>{
+
+    /* MUD */
+
+    mudObjects.forEach(m=>{
 
         ctx.fillStyle="#78350f";
 
         ctx.beginPath();
-        ctx.ellipse(m.x,m.y,m.width/2,m.height/2,0,0,Math.PI*2);
+
+        ctx.ellipse(
+            m.x,
+            m.y,
+            m.width/2,
+            m.height/2,
+            0,
+            0,
+            Math.PI*2
+        );
+
         ctx.fill();
 
-        ctx.fillStyle="#92400e";
+        ctx.fillStyle="#a16207";
 
-        for(let i=0;i<7;i++){
+        for(
+            let i=0;
+            i<7;
+            i++
+        ){
 
             ctx.beginPath();
 
             ctx.arc(
-                m.x+(Math.random()-.5)*m.width,
-                m.y+(Math.random()-.5)*20,
+                m.x+
+                (Math.random()-.5)*
+                m.width,
+
+                m.y+
+                (Math.random()-.5)*20,
+
                 4,
                 0,
                 Math.PI*2
@@ -954,339 +1469,871 @@ function drawSurfaces(){
     });
 }
 
-/* ---------------- PARTICLES ---------------- */
 
-function particle(x,y,color){
+/* =========================================
+   BLAST / PARTICLES
+========================================= */
+
+function createParticle(
+    x,
+    y,
+    color,
+    size=4
+){
 
     particles.push({
+
         x:x,
         y:y,
-        vx:(Math.random()-.5)*5,
-        vy:(Math.random()-.5)*5,
-        life:35,
-        color:color
+
+        vx:
+            (Math.random()-.5)*8,
+
+        vy:
+            (Math.random()-.5)*8,
+
+        life:45,
+
+        color:color,
+
+        size:size
     });
 }
+
+
+function createExplosion(){
+
+    let colors=[
+        "#ef4444",
+        "#f97316",
+        "#facc15",
+        "#ffffff"
+    ];
+
+    for(
+        let i=0;
+        i<45;
+        i++
+    ){
+
+        createParticle(
+            player.x,
+            player.y,
+            colors[
+                Math.floor(
+                    Math.random()*
+                    colors.length
+                )
+            ],
+            4+
+            Math.random()*6
+        );
+    }
+}
+
 
 function drawParticles(){
 
     particles.forEach(p=>{
 
-        ctx.globalAlpha=p.life/35;
+        ctx.globalAlpha=
+            p.life/45;
+
         ctx.fillStyle=p.color;
 
         ctx.beginPath();
-        ctx.arc(p.x,p.y,4,0,Math.PI*2);
+
+        ctx.arc(
+            p.x,
+            p.y,
+            p.size,
+            0,
+            Math.PI*2
+        );
+
         ctx.fill();
     });
 
     ctx.globalAlpha=1;
 }
 
-/* ---------------- UPDATE ---------------- */
+
+/* =========================================
+   ACCIDENT
+========================================= */
+
+let crashCooldown=0;
+
+function crash(){
+
+    if(crashCooldown>0)
+        return;
+
+    crashCooldown=100;
+
+    lives--;
+
+    createExplosion();
+
+    player.speed=0;
+
+    document.getElementById(
+        "lifeDisplay"
+    ).textContent=lives;
+
+    if(lives<=0){
+
+        gameRunning=false;
+
+        setTimeout(
+            showGameOver,
+            700
+        );
+
+    }else{
+
+        setTimeout(()=>{
+
+            player.x=W/2;
+            player.angle=0;
+
+        },500);
+    }
+}
+
+
+function showGameOver(){
+
+    document.getElementById(
+        "finalScore"
+    ).textContent=score;
+
+    document.getElementById(
+        "finalCoins"
+    ).textContent=coinsBalance;
+
+    document.getElementById(
+        "gameOver"
+    ).style.display="flex";
+}
+
+
+/* =========================================
+   UPDATE
+========================================= */
 
 function update(){
 
-    if(!running || paused)return;
+    if(
+        !gameRunning||
+        gamePaused
+    )
+        return;
 
-    let car=currentCar();
 
-    /* acceleration */
+    if(crashCooldown>0)
+        crashCooldown--;
 
-    if(keys.gas)
-        player.speed+=.14*car.speed;
-    else
+
+    let car=getCar();
+
+
+    /* SPEED */
+
+    if(keys.speed){
+
+        player.speed+=
+            .14*car.speed;
+
+    }else{
+
         player.speed-=.035;
+    }
 
-    /* nitro */
+
+    /* NITRO */
 
     if(keys.nitro){
-        player.speed+=.25*car.nitro;
 
-        if(Math.random()<.4)
-            particle(player.x,player.y+55,"#f97316");
+        player.speed+=
+            .25*car.nitro;
+
+        if(
+            Math.random()<.4
+        ){
+
+            createParticle(
+                player.x,
+                player.y+55,
+                "#f97316"
+            );
+        }
     }
 
-    player.speed=Math.max(0,Math.min(player.speed,11*car.speed));
 
-    /* smooth road curve */
+    player.speed=
+        Math.max(
+            0,
+            Math.min(
+                player.speed,
+                11*car.speed
+            )
+        );
 
-    if(Math.random()<.008)
-        curveTarget=(Math.random()-.5)*roadWidth()*.45;
 
-    roadCurve+=(curveTarget-roadCurve)*.008;
+    /* SMOOTH STEERING */
 
-    /* steering */
+    let direction=0;
 
-    let steer=0;
+    if(keys.left)
+        direction=-1;
 
-    if(keys.left)steer-=1;
-    if(keys.right)steer+=1;
+    if(keys.right)
+        direction=1;
 
-    let steeringPower=(2.2+player.speed*.35)*car.handling;
 
-    player.x+=steer*steeringPower;
+    player.x+=
+        direction*
+        (
+            2.3+
+            player.speed*.38
+        )*
+        car.handling;
 
-    let targetAngle=steer*.18;
 
-    player.angle+=(targetAngle-player.angle)*.12;
+    let desiredAngle=
+        direction*.16;
 
-    /* road center */
+    player.angle+=
+        (
+            desiredAngle-
+            player.angle
+        )*.12;
 
-    let center=roadCenter(player.y);
 
-    let minX=center-roadWidth()/2+35;
-    let maxX=center+roadWidth()/2-35;
+    /* ROAD BOUNDARY */
+
+    let minX=
+        roadLeft()+35;
+
+    let maxX=
+        roadRight()-35;
+
 
     if(player.x<minX){
+
         player.x=minX;
-        player.speed*=.98;
+        player.speed*=.97;
     }
+
 
     if(player.x>maxX){
+
         player.x=maxX;
-        player.speed*=.98;
+        player.speed*=.97;
     }
 
-    roadScroll+=player.speed*2.7;
 
-    score+=Math.floor(player.speed*.06);
+    roadOffset+=
+        player.speed*2.8;
 
-    /* traffic */
 
-    spawnTimer--;
+    score+=
+        Math.floor(
+            player.speed*.06
+        );
 
-    if(spawnTimer<=0){
+
+    /* TRAFFIC */
+
+    trafficTimer--;
+
+    if(trafficTimer<=0){
 
         spawnTraffic();
 
-        spawnTimer=Math.max(35,100-player.speed*4);
+        trafficTimer=
+            Math.max(
+                38,
+                95-player.speed*4
+            );
     }
+
 
     traffic.forEach(t=>{
 
-        t.y+=player.speed*1.45-t.speed;
-
-        t.x=roadCenter(t.y)+
-            (t.x-roadCenter(t.y))*0.99;
+        t.y+=
+            player.speed*1.45-
+            t.speed;
     });
 
-    traffic=traffic.filter(t=>t.y<H+150);
 
-    /* coins */
+    traffic=
+        traffic.filter(
+            t=>t.y<H+150
+        );
+
+
+    /* COINS */
 
     coinTimer--;
 
     if(coinTimer<=0){
 
         spawnCoin();
-        coinTimer=45+Math.random()*60;
+
+        coinTimer=
+            45+
+            Math.random()*55;
     }
 
-    coins.forEach(c=>{
 
-        c.y+=player.speed*1.5;
+    coinObjects.forEach(c=>{
+
+        c.y+=
+            player.speed*1.5;
+
         c.spin+=.08;
     });
 
-    coins=coins.filter(c=>c.y<H+60);
 
-    /* surfaces */
+    coinObjects=
+        coinObjects.filter(
+            c=>c.y<H+60
+        );
+
+
+    /* WATER / MUD */
 
     surfaceTimer--;
 
     if(surfaceTimer<=0){
 
         spawnSurface();
-        surfaceTimer=260+Math.random()*300;
+
+        surfaceTimer=
+            260+
+            Math.random()*260;
     }
 
-    puddles.forEach(p=>p.y+=player.speed*1.5);
-    muds.forEach(m=>m.y+=player.speed*1.5);
 
-    puddles=puddles.filter(p=>p.y<H+100);
-    muds=muds.filter(m=>m.y<H+100);
+    waterObjects.forEach(
+        w=>
+        w.y+=
+        player.speed*1.5
+    );
 
-    /* coin collision */
+    mudObjects.forEach(
+        m=>
+        m.y+=
+        player.speed*1.5
+    );
 
-    coins.forEach(c=>{
+
+    waterObjects=
+        waterObjects.filter(
+            w=>w.y<H+100
+        );
+
+    mudObjects=
+        mudObjects.filter(
+            m=>m.y<H+100
+        );
+
+
+    /* COIN COLLISION */
+
+    coinObjects.forEach(c=>{
 
         if(
-            Math.abs(player.x-c.x)<38 &&
-            Math.abs(player.y-c.y)<60
+            Math.abs(
+                player.x-c.x
+            )<38 &&
+
+            Math.abs(
+                player.y-c.y
+            )<60
         ){
 
             c.collected=true;
 
-            gameCoins++;
+            coinsBalance++;
+
             score+=100;
 
-            for(let i=0;i<10;i++)
-                particle(c.x,c.y,"#facc15");
-        }
-    });
+            for(
+                let i=0;
+                i<10;
+                i++
+            ){
 
-    coins=coins.filter(c=>!c.collected);
-
-    /* traffic collision */
-
-    traffic.forEach(t=>{
-
-        if(
-            Math.abs(player.x-t.x)<45 &&
-            Math.abs(player.y-t.y)<70
-        ){
-
-            player.speed*=.4;
-            score=Math.max(0,score-100);
-
-            for(let i=0;i<18;i++)
-                particle(player.x,player.y,"#ef4444");
-        }
-    });
-
-    /* mud */
-
-    muds.forEach(m=>{
-
-        if(
-            Math.abs(player.x-m.x)<m.width/2 &&
-            Math.abs(player.y-m.y)<45
-        ){
-
-            player.dirt=Math.min(100,player.dirt+1);
-
-            player.speed*=.994;
-
-            if(Math.random()<.15)
-                particle(player.x,player.y,"#78350f");
-        }
-    });
-
-    /* water */
-
-    puddles.forEach(p=>{
-
-        if(
-            Math.abs(player.x-p.x)<p.width/2 &&
-            Math.abs(player.y-p.y)<45
-        ){
-
-            player.dirt=Math.max(0,player.dirt-3);
-
-            if(Math.random()<.35){
-
-                particle(
-                    player.x+(Math.random()-.5)*40,
-                    player.y,
-                    "#bae6fd"
+                createParticle(
+                    c.x,
+                    c.y,
+                    "#facc15"
                 );
             }
         }
     });
 
-    /* particles */
+
+    coinObjects=
+        coinObjects.filter(
+            c=>!c.collected
+        );
+
+
+    /* TRAFFIC COLLISION */
+
+    traffic.forEach(t=>{
+
+        if(
+            Math.abs(
+                player.x-t.x
+            )<43 &&
+
+            Math.abs(
+                player.y-t.y
+            )<70
+        ){
+
+            crash();
+        }
+    });
+
+
+    /* MUD */
+
+    mudObjects.forEach(m=>{
+
+        if(
+            Math.abs(
+                player.x-m.x
+            )<m.width/2 &&
+
+            Math.abs(
+                player.y-m.y
+            )<45
+        ){
+
+            player.dirt=
+                Math.min(
+                    100,
+                    player.dirt+1.5
+                );
+
+            player.speed*=.995;
+
+            if(
+                Math.random()<.2
+            ){
+
+                createParticle(
+                    player.x,
+                    player.y,
+                    "#78350f"
+                );
+            }
+        }
+    });
+
+
+    /* WATER */
+
+    waterObjects.forEach(w=>{
+
+        if(
+            Math.abs(
+                player.x-w.x
+            )<w.width/2 &&
+
+            Math.abs(
+                player.y-w.y
+            )<45
+        ){
+
+            player.dirt=
+                Math.max(
+                    0,
+                    player.dirt-4
+                );
+
+            if(
+                Math.random()<.5
+            ){
+
+                createParticle(
+                    player.x+
+                    (Math.random()-.5)*40,
+
+                    player.y,
+
+                    "#bae6fd",
+                    3
+                );
+            }
+        }
+    });
+
+
+    /* PARTICLES */
 
     particles.forEach(p=>{
 
         p.x+=p.vx;
         p.y+=p.vy;
+
+        p.vy+=.08;
+
         p.life--;
     });
 
-    particles=particles.filter(p=>p.life>0);
 
-    /* HUD */
+    particles=
+        particles.filter(
+            p=>p.life>0
+        );
 
-    document.getElementById("coins").textContent=gameCoins;
-    document.getElementById("score").textContent=score;
 
-    document.getElementById("speed").textContent=
-        Math.floor(player.speed*18);
+    /* STATUS */
 
-    document.getElementById("carName").textContent=car.name;
+    let status=
+        document.getElementById(
+            "status"
+        );
 
-    saveGame();
-
-    /* status */
-
-    let status=document.getElementById("mudStatus");
-
-    if(player.dirt>50){
+    if(player.dirt>55){
 
         status.style.display="block";
-        status.textContent="🟤 CAR IS DIRTY — FIND WATER 💧";
-    }
-    else if(player.dirt>0){
+
+        status.textContent=
+            "🟤 DIRTY CAR — FIND WATER 💧";
+
+    }else if(player.dirt>5){
 
         status.style.display="block";
-        status.textContent="🟤 MUD ON CAR";
-    }
-    else{
+
+        status.textContent=
+            "🟤 MUD ON CAR";
+
+    }else{
 
         status.style.display="none";
     }
+
+
+    /* HUD */
+
+    document.getElementById(
+        "coinDisplay"
+    ).textContent=
+        coinsBalance;
+
+    document.getElementById(
+        "scoreDisplay"
+    ).textContent=
+        score;
+
+    document.getElementById(
+        "speedNumber"
+    ).textContent=
+        Math.floor(
+            player.speed*18
+        );
+
+    document.getElementById(
+        "carDisplay"
+    ).textContent=
+        car.name;
+
+    document.getElementById(
+        "lifeDisplay"
+    ).textContent=
+        lives;
+
+    saveData();
 }
 
-/* ---------------- SHOP ---------------- */
+
+/* =========================================
+   PARK
+========================================= */
+
+let parking=false;
+
+document.getElementById(
+    "parkBtn"
+).addEventListener(
+    "pointerdown",
+    e=>{
+
+        e.preventDefault();
+
+        if(!gameRunning)
+            return;
+
+        parking=!parking;
+
+        if(parking){
+
+            player.speed=0;
+
+            document.getElementById(
+                "status"
+            ).style.display="block";
+
+            document.getElementById(
+                "status"
+            ).textContent=
+                "🅿️ PARKED";
+
+        }else{
+
+            document.getElementById(
+                "status"
+            ).style.display="none";
+        }
+    }
+);
+
+
+/* =========================================
+   TOUCH CONTROLS
+========================================= */
+
+function bindButton(
+    id,
+    property
+){
+
+    let button=
+        document.getElementById(id);
+
+    button.addEventListener(
+        "pointerdown",
+        e=>{
+
+            e.preventDefault();
+
+            if(parking)
+                return;
+
+            keys[property]=true;
+        }
+    );
+
+    button.addEventListener(
+        "pointerup",
+        e=>{
+
+            e.preventDefault();
+
+            keys[property]=false;
+        }
+    );
+
+    button.addEventListener(
+        "pointercancel",
+        ()=>{
+            keys[property]=false;
+        }
+    );
+
+    button.addEventListener(
+        "pointerleave",
+        ()=>{
+            keys[property]=false;
+        }
+    );
+}
+
+
+bindButton(
+    "leftBtn",
+    "left"
+);
+
+bindButton(
+    "rightBtn",
+    "right"
+);
+
+bindButton(
+    "speedControl",
+    "speed"
+);
+
+bindButton(
+    "nitroBtn",
+    "nitro"
+);
+
+
+/* =========================================
+   KEYBOARD
+========================================= */
+
+addEventListener(
+    "keydown",
+    e=>{
+
+        if(
+            e.key==="ArrowLeft"||
+            e.key.toLowerCase()==="a"
+        )
+            keys.left=true;
+
+        if(
+            e.key==="ArrowRight"||
+            e.key.toLowerCase()==="d"
+        )
+            keys.right=true;
+
+        if(
+            e.key==="ArrowUp"||
+            e.key.toLowerCase()==="w"
+        )
+            keys.speed=true;
+
+        if(e.code==="Space")
+            keys.nitro=true;
+    }
+);
+
+
+addEventListener(
+    "keyup",
+    e=>{
+
+        if(
+            e.key==="ArrowLeft"||
+            e.key.toLowerCase()==="a"
+        )
+            keys.left=false;
+
+        if(
+            e.key==="ArrowRight"||
+            e.key.toLowerCase()==="d"
+        )
+            keys.right=false;
+
+        if(
+            e.key==="ArrowUp"||
+            e.key.toLowerCase()==="w"
+        )
+            keys.speed=false;
+
+        if(e.code==="Space")
+            keys.nitro=false;
+    }
+);
+
+
+/* =========================================
+   SHOP
+========================================= */
 
 function renderShop(){
 
-    document.getElementById("shopCoins").textContent=gameCoins;
+    document.getElementById(
+        "shopCoins"
+    ).textContent=
+        coinsBalance;
 
-    let grid=document.getElementById("carGrid");
+    let grid=
+        document.getElementById(
+            "carGrid"
+        );
 
     grid.innerHTML="";
 
-    defaultCars.forEach(car=>{
 
-        let isOwned=owned.includes(car.id);
-        let isSelected=selected===car.id;
+    cars.forEach(car=>{
 
-        let card=document.createElement("div");
+        let owned=
+            ownedCars.includes(
+                car.id
+            );
+
+        let equipped=
+            selectedCar===car.id;
+
+
+        let card=
+            document.createElement(
+                "div"
+            );
 
         card.className="carCard";
 
+
         card.innerHTML=`
 
-            <div class="carPreview"
-                 style="background:${car.color}">
-            </div>
+            <div
+                class="carPreview"
+                style="
+                    background:${car.color};
+                    box-shadow:
+                    0 0 15px ${car.color};
+                "
+            ></div>
 
             <b>${car.name}</b>
 
-            <div style="font-size:12px;margin:5px">
-                ⚡ Speed ${Math.round(car.speed*100)}%
+            <div
+                style="
+                    font-size:11px;
+                    margin:5px;
+                "
+            >
+                ⚡ ${Math.round(
+                    car.speed*100
+                )}% Speed
             </div>
 
-            <div style="font-size:12px;margin:5px">
+            <div
+                style="
+                    font-size:11px;
+                    margin:5px;
+                "
+            >
                 🪙 ${car.price}
             </div>
 
-            <button class="buyBtn ${!isOwned?"":"locked"}">
+            <button class="buyBtn">
                 ${
-                    isSelected
+                    equipped
                     ?"EQUIPPED"
-                    :isOwned
+                    :owned
                     ?"EQUIP"
-                    :car.price+" COINS"
+                    :"BUY"
                 }
             </button>
         `;
 
-        let button=card.querySelector("button");
 
-        if(isSelected){
+        let button=
+            card.querySelector(
+                ".buyBtn"
+            );
+
+
+        if(equipped){
 
             button.disabled=true;
+            button.classList.add(
+                "disabled"
+            );
 
-        }else if(isOwned){
+        }else if(owned){
 
             button.onclick=()=>{
 
-                selected=car.id;
+                selectedCar=
+                    car.id;
 
-                saveGame();
+                saveData();
+
                 renderShop();
             };
 
@@ -1294,154 +2341,249 @@ function renderShop(){
 
             button.onclick=()=>{
 
-                if(gameCoins>=car.price){
+                if(
+                    coinsBalance>=
+                    car.price
+                ){
 
-                    gameCoins-=car.price;
+                    coinsBalance-=
+                        car.price;
 
-                    owned.push(car.id);
+                    ownedCars.push(
+                        car.id
+                    );
 
-                    selected=car.id;
+                    selectedCar=
+                        car.id;
 
-                    saveGame();
+                    saveData();
 
                     renderShop();
 
                 }else{
 
                     alert(
-                        "Not enough coins! Collect more coins 🪙"
+                        "🪙 Not enough coins! Keep racing!"
                     );
                 }
             };
         }
 
+
         grid.appendChild(card);
     });
 }
 
-/* ---------------- BUTTONS ---------------- */
 
-function bind(id,key){
+/* =========================================
+   MENU
+========================================= */
 
-    let el=document.getElementById(id);
+document.getElementById(
+    "startBtn"
+).onclick=()=>{
 
-    el.addEventListener("pointerdown",e=>{
-        e.preventDefault();
-        keys[key]=true;
-    });
+    gameRunning=true;
 
-    el.addEventListener("pointerup",e=>{
-        e.preventDefault();
-        keys[key]=false;
-    });
+    gamePaused=false;
 
-    el.addEventListener("pointercancel",()=>{
-        keys[key]=false;
-    });
+    score=0;
 
-    el.addEventListener("pointerleave",()=>{
-        keys[key]=false;
-    });
-}
+    lives=3;
 
-bind("left","left");
-bind("right","right");
-bind("gas","gas");
-bind("nitro","nitro");
+    player.x=W/2;
 
-/* keyboard */
+    player.y=H*.57;
 
-addEventListener("keydown",e=>{
+    player.speed=0;
 
-    if(e.key==="ArrowLeft"||e.key.toLowerCase()==="a")
-        keys.left=true;
+    player.angle=0;
 
-    if(e.key==="ArrowRight"||e.key.toLowerCase()==="d")
-        keys.right=true;
+    player.dirt=0;
 
-    if(e.key==="ArrowUp"||e.key.toLowerCase()==="w")
-        keys.gas=true;
+    traffic=[];
+    coinObjects=[];
+    waterObjects=[];
+    mudObjects=[];
+    particles=[];
 
-    if(e.code==="Space")
-        keys.nitro=true;
-});
+    document.getElementById(
+        "startScreen"
+    ).style.display="none";
 
-addEventListener("keyup",e=>{
-
-    if(e.key==="ArrowLeft"||e.key.toLowerCase()==="a")
-        keys.left=false;
-
-    if(e.key==="ArrowRight"||e.key.toLowerCase()==="d")
-        keys.right=false;
-
-    if(e.key==="ArrowUp"||e.key.toLowerCase()==="w")
-        keys.gas=false;
-
-    if(e.code==="Space")
-        keys.nitro=false;
-});
-
-/* start */
-
-document.getElementById("startBtn").onclick=()=>{
-    startGame();
+    requestFullscreen();
 };
 
-document.getElementById("openShopStart").onclick=()=>{
-    renderShop();
-    document.getElementById("shop").style.display="flex";
-};
 
-document.getElementById("shopBtn").onclick=()=>{
-    renderShop();
-    document.getElementById("shop").style.display="flex";
-};
-
-document.getElementById("closeShop").onclick=()=>{
-    document.getElementById("shop").style.display="none";
-};
-
-document.getElementById("pauseBtn").onclick=()=>{
-
-    if(!running)return;
-
-    paused=true;
-    document.getElementById("pauseScreen").style.display="flex";
-};
-
-document.getElementById("resumeBtn").onclick=()=>{
-
-    paused=false;
-    document.getElementById("pauseScreen").style.display="none";
-};
-
-document.getElementById("pauseShop").onclick=()=>{
+document.getElementById(
+    "startShopBtn"
+).onclick=()=>{
 
     renderShop();
 
-    document.getElementById("pauseScreen").style.display="none";
-    document.getElementById("shop").style.display="flex";
+    document.getElementById(
+        "shop"
+    ).style.display="flex";
 };
 
-/* ---------------- LOOP ---------------- */
+
+document.getElementById(
+    "shopBtn"
+).onclick=()=>{
+
+    renderShop();
+
+    document.getElementById(
+        "shop"
+    ).style.display="flex";
+};
+
+
+document.getElementById(
+    "closeShop"
+).onclick=()=>{
+
+    document.getElementById(
+        "shop"
+    ).style.display="none";
+};
+
+
+document.getElementById(
+    "pauseBtn"
+).onclick=()=>{
+
+    if(!gameRunning)
+        return;
+
+    gamePaused=true;
+
+    document.getElementById(
+        "pauseScreen"
+    ).style.display="flex";
+};
+
+
+document.getElementById(
+    "resumeBtn"
+).onclick=()=>{
+
+    gamePaused=false;
+
+    document.getElementById(
+        "pauseScreen"
+    ).style.display="none";
+};
+
+
+document.getElementById(
+    "pauseShopBtn"
+).onclick=()=>{
+
+    renderShop();
+
+    document.getElementById(
+        "pauseScreen"
+    ).style.display="none";
+
+    document.getElementById(
+        "shop"
+    ).style.display="flex";
+};
+
+
+/* =========================================
+   RESTART
+========================================= */
+
+document.getElementById(
+    "restartBtn"
+).onclick=()=>{
+
+    document.getElementById(
+        "gameOver"
+    ).style.display="none";
+
+    gameRunning=true;
+
+    gamePaused=false;
+
+    score=0;
+
+    lives=3;
+
+    player.x=W/2;
+
+    player.y=H*.57;
+
+    player.speed=0;
+
+    player.angle=0;
+
+    player.dirt=0;
+
+    traffic=[];
+    coinObjects=[];
+    waterObjects=[];
+    mudObjects=[];
+    particles=[];
+
+    document.getElementById(
+        "lifeDisplay"
+    ).textContent="3";
+};
+
+
+document.getElementById(
+    "gameOverShop"
+).onclick=()=>{
+
+    document.getElementById(
+        "gameOver"
+    ).style.display="none";
+
+    renderShop();
+
+    document.getElementById(
+        "shop"
+    ).style.display="flex";
+};
+
+
+/* =========================================
+   GAME LOOP
+========================================= */
 
 function loop(){
 
-    ctx.clearRect(0,0,W,H);
+    ctx.clearRect(
+        0,
+        0,
+        W,
+        H
+    );
 
     drawWorld();
+
     drawSurfaces();
+
     drawCoins();
+
     drawTraffic();
+
     drawParticles();
+
     drawPlayer();
 
     update();
 
-    requestAnimationFrame(loop);
+    requestAnimationFrame(
+        loop
+    );
 }
 
 loop();
+
 </script>
 
 </body>
